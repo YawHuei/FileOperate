@@ -57,6 +57,7 @@ For detailed usage, please refer to https://www.autoitscript.com/autoit3/docs/fu
 4.
 Fileoperate.exe "Folder" "prefix" "title" "root dir" [ flag [ "initial dir" [, hwnd]]] >Temp.bat|.txt
 For detailed usage, please refer to https://www.autoitscript.com/autoit3/docs/functions/FileSelectFolder.htm
+
 Example:
 Fileoperate.exe "Folder" "" "Select a Folder" "" >%~dp0temp.txt
 set /p tcd=<%~dp0temp.txt
@@ -75,6 +76,7 @@ https://www.autoitscript.com/autoit3/docs/functions/StringRegExpReplace.htm
 Fileoperate.exe "StripWS" "file.txt" [1|+2|+4|+8]
 String Strip Space, Line by Line in file. 
 For detailed usage, please refer to https://www.autoitscript.com/autoit3/docs/functions/StringStripWS.htm 
+
 Example:
 strip leading and trailing white space in file.txt by every line 
 Fileoperate.exe "StripWS" "file.txt" 3
@@ -84,6 +86,7 @@ Fileoperate.exe "StripWS" "file.txt" 3
 Fileoperate.exe "FileFill" "FilePath" "RepeatTimes" ["char(Default=space)" ["code(0=UTF-16 (Default), 1=ANSI, 2=UTF-8)]]"
 "FilePath" can have relative 
 For detailed usage, please refer to https://www.autoitscript.com/autoit3/docs/functions/StringFromASCIIArray.htm
+
 Example:
 set file.txt have 200 space word
 Fileoperate.exe "FileFill" "file.txt" "200"
