@@ -6,8 +6,7 @@ See  https://www.autoitscript.com/wiki/AutoIt_and_Malware
 
 On Windows PE, Will Add Folder "\Windows\System32\config\systemprofile\Desktop"
 
-Fileoperate.exe "Drive | Open | Save | Folder | Replace | StripWS | FileFill | SetFileTime" "...."'
-
+Fileoperate.exe "Drive | Open | Save | Folder | Replace | StripWS | FileFill | SRBInFile | PeChecksum | Str2Hex | InputBox | SelectMenu | SetFileTime" "...."'
 
 1.
 Fileoperate.exe "Drive" "prefix" "title" >Temp.bat
@@ -80,6 +79,7 @@ Fileoperate.exe "StripWS" "file.txt" 3
 Fileoperate.exe "FileFill" "FilePath" "RepeatTimes" ["char(Default=space)" ["code(0=UTF-16 (Default), 1=ANSI, 2=UTF-8)]]"
 "FilePath" can have relative 
 For detailed usage, please refer to https://www.autoitscript.com/autoit3/docs/functions/StringFromASCIIArray.htm
+
 Example:
 set file.txt have 200 space word
 Fileoperate.exe "FileFill" "file.txt" "200"
@@ -89,6 +89,58 @@ Fileoperate.exe "FileFill" "file.txt" "200" ":" 1
 
 
 8.
+Fileoperate.exe "Str2Hex" "[type]Strings"
+Example:
+Fileoperate.exe "Str2Hex" "[UTF16LE]\XBCD\XPE" >tmp.txt
+The Contents of the file tmp.txt = 5C0058004200430044005C00580050004500
+[type] are as follows:
+[ANSI]	ANSI
+[UTF16LE]	UTF16 Little Endian
+[UTF16BE]	UTF16 Big Endian
+[UTF8]	UTF8
+
+
+8.1
+Fileoperate.exe Hex2Str" "Strings" "[type]"
+
+
+9.
+Fileoperate.exe "InputBox" ["Default"]
+Example:
+Fileoperate.exe "InputBox" "\XBCD\XPE" >tmp.txt
+The Contents of the file tmp.txt = {input first 9 characters}
+
+
+10.
+Fileoperate.exe "SelectMenu" "Title" "item1|iteme2|..." >out.txt
+The Contents of the file out.txt = ITEM of SelectMenu
+
+
+11.
+Fileoperate.exe "SRBInFile" FilePath "[type]Source" "[type]Replace"
+Method is Find "Search" in File then Set File pos to start write "Replace" step by step.
+Binary File is the same Size before and after modification.
+[type] are as follows:
+[ANSI]	ANSI
+[UTF16LE]	UTF16 Little Endian
+[UTF16BE]	UTF16 Big Endian
+[UTF8]	UTF8
+
+Example:
+Fileoperate.exe "SRBInFile" "FilePath" "0C204060" "0202E40A0"
+Fileoperate.exe "SRBInFile" FilePath "[UTF16LE]\Boot\BCD" "[UTF16LE]\XBCD\XPE"
+Fileoperate.exe "SRBInFile" FilePath "[ANSI]DSc" "[ANSI]trc"
+Fileoperate.exe "SRBInFile" "..\FilePath" "5C0042006F006F0074005C00420043004400" "[UTF16LE]\XBCD\XPE"
+
+
+12.
+Fileoperate.exe "PeChecksum" "FilePath"
+
+Example: "FilePath" allow relative paths.
+Fileoperate.exe "PeChecksum" "..\xboot.exe"
+
+
+13.
 Fileoperate.exe "SetFileTime" "FilePath" [ -1=SystemTime|Year [MON, MDAY, HOUR, MIN, SEC]]"'
 For detailed usage, please refer to https://www.autoitscript.com/autoit3/docs/libfunctions/_Date_Time_SetFileTime.htm
 
