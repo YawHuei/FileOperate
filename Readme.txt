@@ -128,16 +128,15 @@ Binary File is the same Size before and after modification.
 
 Example:
 Fileoperate.exe "SRBInFile" "FilePath" "0C204060" "0202E40A0"
-Fileoperate.exe "SRBInFile" FilePath "[UTF16LE]\Boot\BCD" "[UTF16LE]\XBCD\XPE"
+Fileoperate.exe "SRBInFile" FilePath "[UTF16LE]\X123\xyz" "[UTF16LE]\F321\ZYX"
 Fileoperate.exe "SRBInFile" FilePath "[ANSI]DSc" "[ANSI]trc"
-Fileoperate.exe "SRBInFile" "..\FilePath" "5C0042006F006F0074005C00420043004400" "[UTF16LE]\XBCD\XPE"
 
 
 12.
 Fileoperate.exe "PeChecksum" "FilePath"
 
 Example: "FilePath" allow relative paths.
-Fileoperate.exe "PeChecksum" "..\xboot.exe"
+Fileoperate.exe "PeChecksum" "..\x12345.exe"
 
 
 13.

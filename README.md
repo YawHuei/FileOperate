@@ -1,7 +1,3 @@
-# FileOperate
- File Open Save Folder Dialog etc.
-
-
 The Program is compiled with AutoIt, x64 is compreesed with Upx, It can Run on Windows PE
 
 The Program x86 Version may be marked as a virus.
@@ -10,8 +6,7 @@ See  https://www.autoitscript.com/wiki/AutoIt_and_Malware
 
 On Windows PE, Will Add Folder "\Windows\System32\config\systemprofile\Desktop"
 
-Fileoperate.exe "Drive | Open | Save | Folder | Replace | StripWS | FileFill | SetFileTime" "...."'
-
+Fileoperate.exe "Drive | Open | Save | Folder | Replace | StripWS | FileFill | SRBInFile | PeChecksum | Str2Hex | InputBox | SelectMenu | SetFileTime" "...."'
 
 1.
 Fileoperate.exe "Drive" "prefix" "title" >Temp.bat
@@ -57,7 +52,6 @@ For detailed usage, please refer to https://www.autoitscript.com/autoit3/docs/fu
 4.
 Fileoperate.exe "Folder" "prefix" "title" "root dir" [ flag [ "initial dir" [, hwnd]]] >Temp.bat|.txt
 For detailed usage, please refer to https://www.autoitscript.com/autoit3/docs/functions/FileSelectFolder.htm
-
 Example:
 Fileoperate.exe "Folder" "" "Select a Folder" "" >%~dp0temp.txt
 set /p tcd=<%~dp0temp.txt
@@ -76,7 +70,6 @@ https://www.autoitscript.com/autoit3/docs/functions/StringRegExpReplace.htm
 Fileoperate.exe "StripWS" "file.txt" [1|+2|+4|+8]
 String Strip Space, Line by Line in file. 
 For detailed usage, please refer to https://www.autoitscript.com/autoit3/docs/functions/StringStripWS.htm 
-
 Example:
 strip leading and trailing white space in file.txt by every line 
 Fileoperate.exe "StripWS" "file.txt" 3
@@ -96,11 +89,39 @@ Fileoperate.exe "FileFill" "file.txt" "200" ":" 1
 
 
 8.
-Fileoperate.exe "SetFileTime" "FilePath" [ -1=SystemTime|Year [MON, MDAY, HOUR, MIN, SEC]]"'
-For detailed usage, please refer to https://www.autoitscript.com/autoit3/docs/libfunctions/_Date_Time_SetFileTime.htm
-
+Fileoperate.exe "Str2Hex" "[type]Strings"
 Example:
-set time of mFile.ext file to System Time
-Fileoperate.exe "SetFileTime" "mFile.ext" -1
-Or
-Fileoperate.exe "SetFileTime" "mFile.ext" 2022 3 1 11 20 22
+Fileoperate.exe "Str2Hex" "[UTF16LE]\XBCD\XPE" >tmp.txt
+The Contents of the file tmp.txt = 5C0058004200430044005C00580050004500
+[type] are as follows:
+[ANSI]	ANSI
+[UTF16LE]	UTF16 Little Endian
+[UTF16BE]	UTF16 Big Endian
+[UTF8]	UTF8
+
+
+8.1
+Fileoperate.exe Hex2Str" "Strings" "[type]"
+
+
+9.
+Fileoperate.exe "InputBox" ["Default"]
+Example:
+Fileoperate.exe "InputBox" "\XBCD\XPE" >tmp.txt
+The Contents of the file tmp.txt = {input first 9 characters}
+
+
+10.
+Fileoperate.exe "SelectMenu" "Title" "item1|iteme2|..." >out.txt
+The Contents of the file out.txt = ITEM of SelectMenu
+
+
+11.
+Fileoperate.exe "SRBInFile" FilePath "[type]Source" "[type]Replace"
+Method is Find "Search" in File then Set File pos to start write "Replace" step by step.
+Binary File is the same Size before and after modification.
+[type] are as follows:
+[ANSI]	ANSI
+[UTF16LE]	UTF16 Little Endian
+[UTF16BE]	UTF16 Big Endian
+[UTF8]	UTF8
