@@ -1,4 +1,5 @@
 #NoTrayIcon
+
 #include <Array.au3>
 #include <File.au3>
 #include <Date.au3>
@@ -216,7 +217,7 @@ Select
 			Local $iFileSize = FileGetSize($hFile)
 			Local $ReadData = ""
 			$tFile = FileOpen($hFile, 17)
-			Local $FilePos = 1
+			Local $FilePos = 0
 			While $FilePos < $iFileSize - $iSize
 				FileSetPos($tFile, $FilePos, 0)
 				$ReadData = FileRead($tFile, $iSize)
@@ -254,6 +255,13 @@ Select
 		Exit(1)
 EndSelect
 Exit(0)
+
+#CS
+(1) = strip leading white space
+(2) = strip trailing white space
+(4) = strip double (or more) spaces between words
+(8) = strip all spaces (over-rides all other flags)
+#CE
 
 
 Func mySelectDrive($prefix, $title0)
@@ -437,7 +445,7 @@ Func PECheckSum($hFile)
 		ConsoleWrite("Error occurred when CheckSum" & @CRLF)
 		Return
 	EndIf
-	Local $CorrectChecksum = ReverseBinary($rCheckSum)
+	Local $CorrectChecksum = BinaryMid($rCheckSum, 1, 4)
 ;	MsgBox(4096, $rCheckSum, "Correct: " & $CorrectChecksum)
 
 	If $rHeaderSum = $rCheckSum Then Return
@@ -453,7 +461,7 @@ Func PECheckSum($hFile)
 
 	FileSetPos($tFile, 0x3c, 0)
 	$ReadData = FileRead($tFile, 4)
-	Local $ioffset = ConvertBinary2($ReadData, "DWORD")
+	Local $ioffset = Binary2UINT($ReadData)
 ;	MsgBox(4096, $ReadData, "PE-Offset: " & $ioffset)
 
 	FileSetPos($tFile, $ioffset, 0)
@@ -473,41 +481,11 @@ Func PECheckSum($hFile)
 EndFunc	; ==>PECheckSum
 
 
-; MsgBox(4096, Hex($binary), Hex(ReverseBinary($tr)))
-Func ReverseBinary($Binary)
-;	If Not (VarGetType($Binary) = "Binary") Then SetError(1, "", $Binary)
-	Local $blen = BinaryLen($Binary)
-	Local $struct = "struct;byte dat[" & $blen & "];endstruct"
-	Local $Buffer = DllStructCreate($struct)
-	DllStructSetData($Buffer, 1, $Binary)
-	Local $fDat
-	For $i = 1 To Int($blen/2)
-		$fDat = DllStructGetData($Buffer, "dat", $i)
-		DllStructSetData($Buffer, "dat", DllStructGetData($Buffer, "dat", $blen + 1 - $i), $i)
-		DllStructSetData($Buffer, "dat", $fDat, $blen + 1 - $i)
-	Next
-	Return DllStructGetData(DllStructCreate($struct, DllStructGetPtr($Buffer)), 1)
-EndFunc	; ==> ReverseBinary
-
-
-Func ConvertBinary2($Binary, $iVarType)
-;	If Not (VarGetType($Binary) = "Binary") Then SetError(1, "", $Binary)
-	Local Const $types = "WCHAR;SHORT;USHORT;WORD;INT;LONG;BOOL;UINT;ULONG;DWORD;INT64;UINT64;FLOAT;DOUBLE;"
-	Local $VarType =StringStripWS($iVarType, 8)
-	Local $StrArrray = StringSplit($VarType, ";", 2)
-	If @error Then
-		If Not StringInStr($types, $VarType) Then Return SetError(1, 0, $Binary)
-	Else
-        For $element In $StrArrray
-			If Not StringInStr($types, $element) Then Return SetError(1, 0, $Binary)
-        Next
-	EndIf
-
-	Local $struct = "struct;" & $VarType & ";endstruct"
-	Local $Buffer = DllStructCreate($struct)
+Func Binary2UINT($Binary)
+	Local $Buffer = DllStructCreate("byte[4]")
 	DllStructSetData($Buffer, 1, Binary($Binary))
-	Return DllStructGetData(DllStructCreate($struct, DllStructGetPtr($Buffer)), 1)
-EndFunc	; ==> ConvertBinary2
+	Return DllStructGetData(DllStructCreate("UINT", DllStructGetPtr($Buffer)), 1)
+EndFunc
 
 
 Func MapFileAndCheckSum($sFile, ByRef $rHeaderSum, ByRef $rCheckSum)
